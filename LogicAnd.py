@@ -8,7 +8,7 @@ expected_output = np.array(([-1, -1, -1, 1]))
 
 and_perceptron = PerceptronSimple(2)
 
-alpha = 0.02
+alpha = 0.05
 threshold = 0.2
 limit = int(1 / alpha)
 error = 0
