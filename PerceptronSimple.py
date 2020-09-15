@@ -1,10 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from celluloid import Camera
+from matplotlib.lines import Line2D
 
 
 class Perceptron:
-    def __init__(self):
+    def __init__(self,title):
+        self.title = title
         self.weights = None
         self.weights_history = None
         self.epochs = 0
@@ -52,16 +54,19 @@ class Perceptron:
         expected_outputs = self.predict(entries)
 
         fig = plt.figure()
+        plt.title(self.title)
 
         plt.grid(True)
+
         camera = Camera(fig)
-        t = np.linspace(np.amin(entries[:, :1]), np.amax(entries[:, :1]))
+
         for e in range(self.epochs):
-            print(e)
+
             weights = self.weights_history[e]
 
             for entry, target in zip(entries, expected_outputs):
-                plt.plot(entry[0], entry[1], 'ro' if (target == 1.0) else 'bo')
+                plt.plot(entry[0], entry[1], 'ro' if (target == 1.0) else 'bo', label='%i' % target)
+
             y = np.array([])
             x = np.array([])
             slope = -(weights[0] / weights[2]) / (weights[0] / weights[1])
@@ -72,8 +77,8 @@ class Perceptron:
 
             for xi in delta:
                 y1 = ((slope * xi) + intercept)
-                if -1.5 <= y1 <= 1.5:
-                    print("y1:", y1, " x:", xi)
+                if delta[0] <= y1 <= delta[1]:
+
                     x = np.append(x, [xi])
                     y = np.append(y, [y1])
                     k += 1
@@ -82,15 +87,17 @@ class Perceptron:
             if k < 2:
                 for yi in delta:
                     x1 = (yi - intercept) / slope
-                    if -1.5 <= x1 <= 1.5:
-                        print("y:", y1, " x1:", x1)
+                    if delta[0] <= x1 <= delta[1]:
+
                         x = np.append(x, [x1])
                         y = np.append(y, [yi])
                         k += 1
                         if k == 2:
                             break
             plt.plot(x, y, 'k')
-            camera.snap()
 
+            camera.snap()
+            handles = [Line2D([0], [0], color='r', label='1'), Line2D([0], [0], color='b', label='-1')]
+            plt.legend(handles=handles, loc='upper right')
         animation = camera.animate(interval=100, repeat=False)
         plt.show()
