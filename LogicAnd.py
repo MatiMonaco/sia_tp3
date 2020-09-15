@@ -4,11 +4,11 @@ import numpy as np
 
 entries = np.array(([-1, 1], [1, -1], [-1, -1], [1, 1]))
 entries_len = len(entries)
-expected_output = np.array(([-1, -1, -1, 1]))
+expected_output = np.array(([1, 1, -1, 1]))
 
 and_perceptron = PerceptronSimple(2)
 
-alpha = 0.05
+alpha = 0.0001
 threshold = 0.2
 limit = int(1 / alpha)
 error = 0
@@ -18,23 +18,23 @@ weights_history = [and_perceptron.weights]
 print(and_perceptron.weights)
 i = 0
 count = 0
+err = 0
 while min_error > 0 and i < limit:
-    if count > 100*entries_len:
-        count = 0
-        and_perceptron.weights = 2*np.random.random_sample(2)-1
+    # if count > 100*entries_len:
+    #     count = 0
+    #     and_perceptron.weights = 2*np.random.random_sample(2)-1
     error = 0
     for j in range(0, entries_len):
         and_perceptron.propagation(entries[j, 0:2], threshold)
         and_perceptron.update(alpha, expected_output[j])
         weights_history = np.concatenate((weights_history, [and_perceptron.weights]))
-        error += 1 if (and_perceptron.output != expected_output[j]) else 0
-        print("error: ", error," output:",and_perceptron.output," exp_output:",expected_output[j])
+        err = expected_output[j] - and_perceptron.output
+        error += 1 if (err != 0) else 0
+        threshold = threshold - alpha*np.sign(err);
+
     if error < min_error:
         min_error = error
         min_weight = and_perceptron.weights.copy()
-    elif error > min_error:
-        and_perceptron.weights = 2*np.random.random_sample(2)-1
-
     i += 1
     count += 1
 
@@ -48,5 +48,8 @@ for i in range(0, entries_len):
 
 plt.plot(weights_history[:, 0], 'k')
 plt.plot(weights_history[:, 1], 'r')
+plt.ylabel('Weights')
+plt.xlabel('Iteration')
+plt.title('Logic AND')
 plt.show()
 print(weights_history)
