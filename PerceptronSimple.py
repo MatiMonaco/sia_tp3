@@ -32,7 +32,6 @@ class Perceptron:
 
             self.epochs += 1
             if error == 0:
-                print("error:",error)
                 break
 
         print("Iterations:%i" % self.epochs)
@@ -105,7 +104,7 @@ class Perceptron:
             plt.plot(x, y, 'k')
 
             camera.snap()
-            handles = [Line2D([0], [0], color='r', label='1'), Line2D([0], [0], color='b', label='-1')]
+            handles = [Line2D(range(1), range(1),marker='o',markerfacecolor="red", color='white', label='1'), Line2D([0], [0],marker='o',markerfacecolor="blue", color='white', label='-1')]
             plt.legend(handles=handles, loc='lower right')
         animation = camera.animate(interval=100, repeat=False)
         plt.show()
