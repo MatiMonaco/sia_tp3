@@ -11,8 +11,8 @@ class Perceptron:
         self.weights_history = None
         self.epochs = 0
 
-    def fit(self, learn_factor, entries, expected_outputs, n_iter=150):
-
+    def fit(self, learn_factor, entries, expected_outputs):
+        limit = int(10 / learn_factor)
         n_samples = entries.shape[0]
         n_features = entries.shape[1]
 
@@ -21,10 +21,10 @@ class Perceptron:
         # Add column of 1s
         x = np.concatenate([entries, np.ones((n_samples, 1))], axis=1)
 
-        for i in range(n_iter):
+        for i in range(limit):
             error = 0
             for j in range(n_samples):
-
+                print(j,": ",expected_outputs[j] * np.dot(self.weights, x[j, :]) )
                 if expected_outputs[j] * np.dot(self.weights, x[j, :]) <= 0:
                     self.weights += 2 * learn_factor * expected_outputs[j] * x[j, :]
                     error += 1
@@ -32,6 +32,7 @@ class Perceptron:
 
             self.epochs += 1
             if error == 0:
+                print(error)
                 break
 
         print("Iterations:%i" % self.epochs)
@@ -76,8 +77,8 @@ class Perceptron:
 
             y = np.array([])
             x = np.array([])
-            slope = -(weights[0] / weights[2]) / (weights[0] / weights[1])
-            intercept = -weights[0] / weights[2]
+            slope = -(weights[2] / weights[1]) / (weights[2] / weights[0])
+            intercept = -weights[2] / weights[1]
             k = 0
 
             delta = np.array([-1.5, 1.5])
@@ -105,6 +106,6 @@ class Perceptron:
 
             camera.snap()
             handles = [Line2D(range(1), range(1),marker='o',markerfacecolor="red", color='white', label='1'), Line2D([0], [0],marker='o',markerfacecolor="blue", color='white', label='-1')]
-            plt.legend(handles=handles, loc='lower right')
-        animation = camera.animate(interval=100, repeat=False)
+        plt.legend(handles=handles, loc='lower right')
+        animation = camera.animate(interval=50, repeat=False)
         plt.show()
