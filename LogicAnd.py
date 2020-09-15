@@ -1,4 +1,4 @@
-from Perceptron import Perceptron
+from PerceptronSimple import Perceptron
 import matplotlib.pyplot as plt
 import numpy as np
 
