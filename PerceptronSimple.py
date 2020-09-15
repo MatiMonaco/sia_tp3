@@ -5,13 +5,13 @@ from matplotlib.lines import Line2D
 
 
 class Perceptron:
-    def __init__(self,title):
+    def __init__(self, title):
         self.title = title
         self.weights = None
         self.weights_history = None
         self.epochs = 0
 
-    def fit(self, learn_factor, entries, expected_outputs, n_iter=100):
+    def fit(self, learn_factor, entries, expected_outputs, n_iter=150):
 
         n_samples = entries.shape[0]
         n_features = entries.shape[1]
@@ -22,12 +22,20 @@ class Perceptron:
         x = np.concatenate([entries, np.ones((n_samples, 1))], axis=1)
 
         for i in range(n_iter):
+            error = 0
             for j in range(n_samples):
+
                 if expected_outputs[j] * np.dot(self.weights, x[j, :]) <= 0:
                     self.weights += 2 * learn_factor * expected_outputs[j] * x[j, :]
-
+                    error += 1
                 self.weights_history = np.concatenate((self.weights_history, [self.weights]))
-                self.epochs += 1
+
+            self.epochs += 1
+            if error == 0:
+                print("error:",error)
+                break
+
+        print("Iterations:%i" % self.epochs)
         self.plot(entries)
 
     def predict(self, entries):
@@ -60,7 +68,7 @@ class Perceptron:
 
         camera = Camera(fig)
 
-        for e in range(self.epochs):
+        for e in range(len(self.weights_history)):
 
             weights = self.weights_history[e]
 
@@ -98,6 +106,6 @@ class Perceptron:
 
             camera.snap()
             handles = [Line2D([0], [0], color='r', label='1'), Line2D([0], [0], color='b', label='-1')]
-            plt.legend(handles=handles, loc='upper right')
+            plt.legend(handles=handles, loc='lower right')
         animation = camera.animate(interval=100, repeat=False)
         plt.show()
