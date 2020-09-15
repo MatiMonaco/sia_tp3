@@ -4,7 +4,7 @@ import numpy as np
 
 entries = np.array(([-1, 1], [1, -1], [-1, -1], [1, 1]))
 entries_len = len(entries)
-expected_output = np.array(([1, 1, -1, 1]))
+expected_output = np.array(([-1, -1, -1, 1]))
 
 and_perceptron = Perceptron('Perceptrón Simple <<Y lógico>>')
 

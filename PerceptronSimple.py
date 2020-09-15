@@ -24,7 +24,7 @@ class Perceptron:
         for i in range(limit):
             error = 0
             for j in range(n_samples):
-                print(j,": ",expected_outputs[j] * np.dot(self.weights, x[j, :]) )
+              
                 if expected_outputs[j] * np.dot(self.weights, x[j, :]) <= 0:
                     self.weights += 2 * learn_factor * expected_outputs[j] * x[j, :]
                     error += 1
