@@ -4,7 +4,7 @@ import numpy as np
 class PerceptronSimple:
     def __init__(self, n):
         self.n = n
-        self.weights = np.random.random_sample(2) * 2 - 1
+        self.weights = np.random.random_sample(n) * 2 - 1
         self.output = None
         self.entries = None
         self.threshold = None
