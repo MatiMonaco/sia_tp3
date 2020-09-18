@@ -1,12 +1,11 @@
-from PerceptronSimple import Perceptron
-import matplotlib.pyplot as plt
+from StepSimplePerceptron import StepSimplePerceptron
 import numpy as np
 
 entries = np.array(([-1, 1], [1, -1], [-1, -1], [1, 1]))
 entries_len = len(entries)
 expected_output = np.array(([-1, -1, -1, 1]))
 
-and_perceptron = Perceptron('Perceptrón Simple <<Y lógico>>')
+and_perceptron = StepSimplePerceptron('Perceptrón Simple <<Y lógico>>')
 
 and_perceptron.fit(0.01,entries,expected_output)
 outputs = and_perceptron.predict(entries)
