@@ -6,14 +6,14 @@ from celluloid import Camera
 class SimpleLinearPerceptron:
 
     def __init__(self):
-        self.MAX_ERROR = 1000
+
         self.weights = None
         self.weights_history = None
         self.errors_history = np.array([])
         self.epochs = 0
 
-    def fit(self, learn_factor, entries, z, precision, recalculation_delta):
-        limit = int(10 / learn_factor)
+    def fit(self, learn_factor, entries, expected_outputs, precision,limit, recalculation,max_error):
+
         n_samples = entries.shape[0]
         n_features = entries.shape[1]
 
@@ -23,30 +23,36 @@ class SimpleLinearPerceptron:
         x = np.concatenate([entries, np.ones((n_samples, 1))], axis=1)
         count = 0
         for i in range(limit):
-            if count >= limit * recalculation_delta:
+            if count >= recalculation:
                 self.weights = np.random.random_sample(n_features + 1) * 2 - 1
                 count = 0
             error = 0
             for j in range(n_samples):
                 theta = np.dot(self.weights, x[j, :])
+
+                delta_w = learn_factor * (expected_outputs[j] - theta) * x[j, :]
+
+                self.weights += delta_w
                 print("w: ", self.weights)
                 print("entry: ", x[j, :])
-                print("z: ", z[j])
+                print("expected_output: ", expected_outputs[j])
                 print("theta: ", theta)
-                delta_w = learn_factor * (z[j] - theta) * x[j, :]
-                print("delta_w: ", delta_w, " ", (z[j] - theta))
-                self.weights += delta_w
-                error += np.power(z[j] - theta, 2) / 2
-                print("error:", error)
+                print("delta_w: ", delta_w, " ", (expected_outputs[j] - theta))
+                error += np.power(expected_outputs[j] - theta, 2) / 2
+
                 self.weights_history = np.concatenate((self.weights_history, [self.weights]))
             self.errors_history = np.append(self.errors_history, [error])
+            print("error:", error)
             self.epochs += 1
             count += 1
+
             if error <= precision:
                 self.plot()
                 return True
                 break
-            elif error >= self.MAX_ERROR:
+
+            elif i == limit-1:
+                self.plot()
                 return False
 
     def predict(self, entries):
