@@ -12,20 +12,21 @@ class SimpleLinearPerceptron:
         self.errors_history = np.array([])
         self.epochs = 0
 
-    def fit(self, learn_factor, entries, expected_outputs, precision,limit, recalculation,max_error):
+    def fit(self,initial_weights, learn_factor, entries, expected_outputs, precision, limit):
 
         n_samples = entries.shape[0]
-        n_features = entries.shape[1]
 
-        self.weights = np.random.random_sample(n_features + 1) * 2 - 1
+
+        #self.weights = np.random.random_sample(n_features + 1) * 2 - 1
+        self.weights = initial_weights
         self.weights_history = [self.weights]
         # Add column of 1s
         x = np.concatenate([entries, np.ones((n_samples, 1))], axis=1)
         count = 0
         for i in range(limit):
-            if count >= recalculation:
-                self.weights = np.random.random_sample(n_features + 1) * 2 - 1
-                count = 0
+            # if count >= recalculation:
+            #   self.weights = np.random.random_sample(n_features + 1) * 2 - 1
+            #  count = 0
             error = 0
             for j in range(n_samples):
                 theta = np.dot(self.weights, x[j, :])
@@ -33,33 +34,20 @@ class SimpleLinearPerceptron:
                 delta_w = learn_factor * (expected_outputs[j] - theta) * x[j, :]
 
                 self.weights += delta_w
-                print("w: ", self.weights)
-                print("entry: ", x[j, :])
-                print("expected_output: ", expected_outputs[j])
-                print("theta: ", theta)
-                print("delta_w: ", delta_w, " ", (expected_outputs[j] - theta))
                 error += np.power(expected_outputs[j] - theta, 2) / 2
 
                 self.weights_history = np.concatenate((self.weights_history, [self.weights]))
             self.errors_history = np.append(self.errors_history, [error])
-            print("error:", error)
             self.epochs += 1
-            count += 1
-
-            if error <= precision:
-                self.plot()
-                return True
+            # count += 1
+            if error <= precision or i == limit - 1:
+                return self.weights, error,self.epochs
                 break
-
-            elif i == limit-1:
-                self.plot()
-                return False
 
     def predict(self, entries):
         if not hasattr(self, 'weights'):
             print('The model is not trained yet!')
             return
-
         n_samples = entries.shape[0]
         # Add column of 1s
         x = np.concatenate([entries, np.ones((n_samples, 1))], axis=1)
