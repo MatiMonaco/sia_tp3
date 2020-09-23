@@ -12,7 +12,7 @@ class SimpleLinearPerceptron:
         # self.errors_history = np.array([])
         self.epochs = 0
 
-    def fit(self, initial_weights, learn_factor, entries, expected_outputs, precision, limit):
+    def fit(self, initial_weights, learn_factor, entries, expected_outputs, limit):
 
         n_samples = entries.shape[0]
 

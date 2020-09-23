@@ -11,8 +11,8 @@ class StepSimplePerceptron:
         self.weights_history = None
         self.epochs = 0
 
-    def fit(self, learn_factor, entries, expected_outputs):
-        limit = int(1 / learn_factor)
+    def fit(self, learn_factor, entries, expected_outputs,limit):
+
         n_samples = entries.shape[0]
         n_features = entries.shape[1]
 
@@ -31,8 +31,8 @@ class StepSimplePerceptron:
                 self.weights_history = np.concatenate((self.weights_history, [self.weights]))
 
             self.epochs += 1
-            if error == 0:
-                print(error)
+            if error == 0 or i == limit-1:
+                print("Error: ",error)
                 break
 
         print("Iterations:%i" % self.epochs)
@@ -79,7 +79,7 @@ class StepSimplePerceptron:
             intercept = -weights[2] / weights[1]
             k = 0
 
-            delta = np.array([-1.5, 1.5])
+            delta = np.array([-2.5, 2.5])
 
             for xi in delta:
                 y1 = ((slope * xi) + intercept)
@@ -106,7 +106,7 @@ class StepSimplePerceptron:
             handles = [Line2D(range(1), range(1), marker='o', markerfacecolor="red", color='white', label='1'),
                        Line2D([0], [0], marker='o', markerfacecolor="blue", color='white', label='-1')]
         plt.legend(handles=handles, loc='lower right')
-        animation = camera.animate(interval=50, repeat=False)
+        animation = camera.animate(interval=1, repeat=False)
         plt.show()
 
 

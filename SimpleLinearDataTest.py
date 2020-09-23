@@ -4,7 +4,7 @@ from SimpleLinearPerceptron import SimpleLinearPerceptron
 import numpy as np
 from celluloid import Camera
 import matplotlib.pyplot as plt
-import random
+import json
 
 # Load data
 entries_data = np.genfromtxt("./data/train_set.txt", delimiter=",", skip_header=1)
@@ -18,13 +18,21 @@ z_data = z_data / z_norm
 entries_len = len(entries_data)
 n_features = entries_data.shape[1]
 
+with open('./data/config.json') as json_file:
+    data = json.load(json_file)
+    for p in data['ej2']:
+        print('Total Epochs: ' + p['total_epochs'])
+        print('Epoch Step: ' + p['epoch_step'])
+        print('Learn Factor: ' + p['learn_factor'])
+        print('K: ' + p['k'])
+        print('')
+
 slp = SimpleLinearPerceptron()
-k = 5
-total_epochs = 300
-epoch_step = 25
+k = int(p['k'])
+total_epochs = int(p['total_epochs'])
+epoch_step = int(p['epoch_step'])
 epochs_array = np.arange(epoch_step, total_epochs + epoch_step, epoch_step)
-learn_factor = 0.01
-precision = 0.01
+learn_factor = float(p['learn_factor'])
 ################################################
 
 # Initialize train and test partitions
@@ -69,7 +77,7 @@ for epoch in epochs_array:
     for i in range(k):
         print("#######################################")
         print("K = ", i)
-        new_weights, train_error, epochs = slp.fit(weights, learn_factor, train_sets[i], train_outputs[i], precision,
+        new_weights, train_error, epochs = slp.fit(weights, learn_factor, train_sets[i], train_outputs[i],
                                                    epoch)
         test_output, test_error = slp.predict(test_sets[i], test_outputs[i])
         print("Test Error: ", test_error)

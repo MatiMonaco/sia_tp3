@@ -6,8 +6,7 @@ import numpy as np
 import numpy as np
 from celluloid import Camera
 import matplotlib.pyplot as plt
-import random
-
+import json
 # Load data
 entries_data = np.genfromtxt("./data/train_set.txt", delimiter=",", skip_header=1)
 entries_norm = np.linalg.norm(entries_data)
@@ -21,13 +20,22 @@ entries_len = len(entries_data)
 n_features = entries_data.shape[1]
 
 nlsp = NonLinearSimplePerceptron()
-k = 5
-total_epochs = 300
-epoch_step = 25
+with open('./data/config.json') as json_file:
+    data = json.load(json_file)
+    for p in data['ej2']:
+        print('Total Epochs: ' + p['total_epochs'])
+        print('Epoch Step: ' + p['epoch_step'])
+        print('Learn Factor: ' + p['learn_factor'])
+        print('Beta: ' + p['beta'])
+        print('K: ' + p['k'])
+        print('')
+
+k = int(p['k'])
+total_epochs = int(p['total_epochs'])
+epoch_step = int(p['epoch_step'])
 epochs_array = np.arange(epoch_step, total_epochs + epoch_step, epoch_step)
-learn_factor = 0.01
-precision = 0.01
-beta = 1
+learn_factor = float(p['learn_factor'])
+beta = float(p['beta'])
 ################################################
 
 # Initialize train and test partitions
@@ -72,7 +80,7 @@ for epoch in epochs_array:
     for i in range(k):
         print("#######################################")
         print("K = ", i)
-        new_weights, train_error, epochs = nlsp.fit(weights, learn_factor,beta, train_sets[i], train_outputs[i], precision,
+        new_weights, train_error, epochs = nlsp.fit(weights, learn_factor,beta, train_sets[i], train_outputs[i],
                                                    epoch)
         test_output, test_error = nlsp.predict(test_sets[i], test_outputs[i],beta)
         print("Test Error: ", test_error)
@@ -120,8 +128,6 @@ plt.show()
 # Print prediction
 
 e_o = test_outputs[min_index]
-print("e_o: ",e_o)
-print("t_o: ",min_test_outputs)
 train_s = train_sets[min_index]
 for i in range(test_size):
     t_o = min_test_outputs[i]

@@ -43,7 +43,7 @@ class NonLinearSimplePerceptron:
         animation = camera.animate(interval=length * 0.01, repeat=False)
         plt.show()
 
-    def fit(self, initial_weights, learn_factor,beta, entries, expected_outputs, precision, limit):
+    def fit(self, initial_weights, learn_factor,beta, entries, expected_outputs, limit):
 
         n_samples = entries.shape[0]
 
