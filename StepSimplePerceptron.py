@@ -5,14 +5,15 @@ from matplotlib.lines import Line2D
 
 
 class StepSimplePerceptron:
-    def __init__(self, title):
-        self.title = title
+    def __init__(self):
+
         self.weights = None
         self.weights_history = None
         self.epochs = 0
+        self.limit = 0
 
-    def fit(self, learn_factor, entries, expected_outputs,limit):
-
+    def fit(self, learn_factor, entries, expected_outputs, limit):
+        self.limit = limit
         n_samples = entries.shape[0]
         n_features = entries.shape[1]
 
@@ -31,11 +32,11 @@ class StepSimplePerceptron:
                 self.weights_history = np.concatenate((self.weights_history, [self.weights]))
 
             self.epochs += 1
-            if error == 0 or i == limit-1:
-                print("Error: ",error)
+            if error == 0 or i == limit - 1:
+                print("Epochs: ", i+1)
+                print("Error: ", error)
                 break
 
-        print("Iterations:%i" % self.epochs)
         self.plot(entries, expected_outputs)
 
     def predict(self, entries):
@@ -60,14 +61,14 @@ class StepSimplePerceptron:
             print('n_features must be 2')
             return
 
-        fig = plt.figure()
-        plt.title(self.title)
+        fig, axes = plt.subplots()
 
         plt.grid(True)
 
         camera = Camera(fig)
-
-        for e in range(len(self.weights_history)):
+        length = len(self.weights_history)
+        entry_len = len(entries)
+        for e in range(length):
 
             weights = self.weights_history[e]
             for entry, target in zip(entries, expected_outputs):
@@ -79,7 +80,7 @@ class StepSimplePerceptron:
             intercept = -weights[2] / weights[1]
             k = 0
 
-            delta = np.array([-2.5, 2.5])
+            delta = np.array([-2, 2])
 
             for xi in delta:
                 y1 = ((slope * xi) + intercept)
@@ -100,6 +101,11 @@ class StepSimplePerceptron:
                         k += 1
                         if k == 2:
                             break
+            iteration = int(e / entry_len)
+            plt.text(0.5, 1.01, "Epochs: %i" % iteration+"/%i"%self.limit, horizontalalignment='center',
+                     verticalalignment='bottom',
+                     transform=axes.transAxes)
+
             plt.plot(x, y, 'k')
 
             camera.snap()
@@ -108,5 +114,3 @@ class StepSimplePerceptron:
         plt.legend(handles=handles, loc='lower right')
         animation = camera.animate(interval=1, repeat=False)
         plt.show()
-
-

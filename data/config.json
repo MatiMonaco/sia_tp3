@@ -8,7 +8,7 @@
   "ej2": [{
       "total_epochs": "300",
       "epoch_step": "25",
-      "learn_factor": "0.01",
+      "learn_factor": "0.1",
       "k": "5",
       "beta": "1"
   }]

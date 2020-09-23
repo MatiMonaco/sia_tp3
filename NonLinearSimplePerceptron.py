@@ -19,29 +19,6 @@ class NonLinearSimplePerceptron:
         self.errors_history = np.array([])
         self.epochs = 0
 
-    def plot(self):
-        if not hasattr(self, 'weights'):
-            print('The model is not trained yet!')
-            return
-
-        fig, axes = plt.subplots()
-        x = []
-        y = []
-        print("Epochs:", self.epochs)
-        plt.grid(True)
-        length = len(self.errors_history)
-        camera = Camera(fig)
-
-        for i in range(length):
-            x = np.append(x, [i + 1])
-            y = np.append(y, [self.errors_history[i]])
-            plt.plot(x, y, 'k')
-            camera.snap()
-        #     handles = [Line2D(range(1), range(1), marker='o', markerfacecolor="red", color='white', label='1'),
-        #                Line2D([0], [0], marker='o', markerfacecolor="blue", color='white', label='-1')]
-        # plt.legend(handles=handles, loc='lower right')
-        animation = camera.animate(interval=length * 0.01, repeat=False)
-        plt.show()
 
     def fit(self, initial_weights, learn_factor,beta, entries, expected_outputs, limit):
 

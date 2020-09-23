@@ -7,7 +7,7 @@ entries = np.array(([-1, 1], [1, -1], [-1, -1], [1, 1]))
 entries_len = len(entries)
 expected_output = np.array(([-1, -1, -1, 1]))
 
-and_perceptron = StepSimplePerceptron('Perceptrón Simple <<Y lógico>>')
+and_perceptron = StepSimplePerceptron()
 with open('./data/config.json') as json_file:
     data = json.load(json_file)
     for p in data['ej1']:

@@ -118,15 +118,13 @@ plt.legend(handles=handles, loc='upper right')
 plt.title("Test and Train errors")
 plt.xlabel("Epochs")
 plt.ylabel("Error")
-animation = camera.animate(interval=length * 0.7, repeat=False)
+animation = camera.animate(interval=1, repeat=False)
 plt.show()
 ################################################
 
 # Print prediction
 
 e_o = test_outputs[min_index]
-print("e_o: ",e_o)
-print("t_o: ",min_test_outputs)
 train_s = train_sets[min_index]
 for i in range(test_size):
     t_o = min_test_outputs[i]
