@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-
+import matplotlib.pyplot as plt
 
 def sigmoid(x):
     return 1.0 / (1 + np.exp(-x))
@@ -30,9 +30,9 @@ class Network:
         deltas = []
         for i in range(len(neurons_of_layer) - 1):
             w = np.random.rand(neurons_of_layer[i], neurons_of_layer[i + 1])
-            b = np.random.rand(neurons_of_layer[i+1], 1)
+            b = np.random.rand(neurons_of_layer[i + 1], 1)
             d = np.zeros((neurons_of_layer[i], neurons_of_layer[i + 1]))
-            deltas_i = np.zeros((neurons_of_layer[i+1], 1))
+            deltas_i = np.zeros((neurons_of_layer[i + 1], 1))
             deltas.append(deltas_i)
             derivatives.append(d)
             weights.append(w)
@@ -62,13 +62,17 @@ class Network:
             x = np.dot(w.T, input_) + self.biases[i].T
             x = x.reshape(x.shape[1])
             input_ = sigmoid(x)
-            self.activations[i+1] = input_
+            self.activations[i + 1] = input_
 
         return self.activations[-1]
 
-    def train(self, inputs, outputs, epochs, eta):
+    def train(self, inputs, outputs, epochs, eta, adaptive_lr=False):
 
+        loss = []
+        x = []
+        etas = []
         for i in range(epochs):
+            total_error = 0
             for j, input_ in enumerate(inputs):
                 predicted_output = self.predict(input_)
 
@@ -77,11 +81,20 @@ class Network:
                 self.back_propagate(error)
 
                 self.update_weights(eta)
-            print("Epoch: {}".format(i))
+
+                total_error += self.mean_square_error(outputs[j], predicted_output)
+            print("Error: {} at epoch {}".format(total_error / len(inputs), i+1))
+            if adaptive_lr:
+                etas.append(eta)
+                eta = self.exp_decay(i, etas[0])
+            loss.append(total_error / len(inputs))
+            x.append(i)
+        plt.plot(x, loss)
+        plt.legend(str(eta))
 
     def back_propagate(self, error):
         for i in reversed(range(len(self.derivatives))):
-            output = self.activations[i+1]
+            output = self.activations[i + 1]
 
             delta = sigmoid_derivative(output) * error
             delta = delta.reshape(delta.shape[0], -1).T
@@ -100,14 +113,52 @@ class Network:
             self.weights[i] += eta * self.derivatives[i]
             self.biases[i] += eta * self.deltas[i]
 
+    def mean_square_error(self, expected, predicted_output):
+        return np.average((expected - predicted_output) ** 2)
 
-nn = Network(2, [3], 1)
+    def exp_decay(self, epoch, eta):
+        k = 0.001
+        x = np.exp(-k * epoch)
+        return eta * x
 
-input_test = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-output_test = np.array([0, 1, 1, 0])
+    def reset(self, n_of_inputs, hidden_layers, n_of_outputs):
+        self.__init__(n_of_inputs, hidden_layers, n_of_outputs)
 
-nn.train(input_test, output_test, 10000, 0.5)
 
-for inp in range(len(input_test)):
-    output = nn.predict(input_test[inp])
-    print("xor [{} , {}] = {}".format(input_test[inp][0], input_test[inp][1], output))
+df = pd.read_csv('numerosenbits', delimiter="\n", header=None)
+
+data_array = np.array(df)
+data_array = data_array.reshape(10, 7)
+
+remove_spaces = lambda x: x.replace(" ", "")
+
+for i in range(len(data_array)):
+    for j in range(len(data_array[i])):
+        data_array[i][j] = int(remove_spaces(data_array[i][j]), 2)
+
+input_numbers = data_array.astype(float) / 31
+# output_numbers = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) / 9
+output_numbers = np.array([1, 0, 1, 0, 1, 0, 1, 0, 1, 0])
+
+
+nn = Network(7, [5], 1)
+lrs = [0.00001, 0.1, 0.5, 1, 5, 10]
+for i in lrs:
+    nn.train(input_numbers, output_numbers, 100, i)
+    nn.reset(7, [5], 1)
+
+plt.show()
+
+for inp in range(len(input_numbers)):
+    output = nn.predict(input_numbers[inp])
+    print("input: {}  = {}".format(inp, output))
+
+# XOR TEST:
+# input_xor = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+# output_xor = np.array([0, 1, 1, 0])
+# nn = Network(2, [3], 1)
+# nn.train(input_xor, output_xor, 10000, 0.5)
+#
+# for inp in range(len(input_xor)):
+#     output = nn.predict(input_xor[inp])
+#     print("xor [{} , {}] = {}".format(input_xor[inp][0], input_xor[inp][1], output))
