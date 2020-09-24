@@ -2,12 +2,15 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 def sigmoid(x):
-    return 1.0 / (1 + np.exp(-x))
+    # return 1.0 / (1 + np.exp(-x))
+    return np.tanh(x)
 
 
 def sigmoid_derivative(x):
-    return x * (1 - x)
+    # return x * (1 - x)
+    return 1 - np.tanh(x)*np.tanh(x)
 
 
 class Network:
@@ -90,7 +93,7 @@ class Network:
             loss.append(total_error / len(inputs))
             x.append(i)
         plt.plot(x, loss)
-        plt.legend(str(eta))
+        plt.show()
 
     def back_propagate(self, error):
         for i in reversed(range(len(self.derivatives))):
@@ -138,26 +141,23 @@ for i in range(len(data_array)):
 
 input_numbers = data_array.astype(float) / 31
 # output_numbers = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) / 9
-output_numbers = np.array([1, 0, 1, 0, 1, 0, 1, 0, 1, 0])
+output_numbers = np.array([1, -1, 1, -1, 1, -1, 1, -1, 1, -1])
 
 
 nn = Network(7, [5], 1)
-lrs = [0.00001, 0.1, 0.5, 1, 5, 10]
-for i in lrs:
-    nn.train(input_numbers, output_numbers, 100, i)
-    nn.reset(7, [5], 1)
-
-plt.show()
+nn.train(input_numbers[0:5], output_numbers, 10000, 0.5)
 
 for inp in range(len(input_numbers)):
     output = nn.predict(input_numbers[inp])
     print("input: {}  = {}".format(inp, output))
 
 # XOR TEST:
-# input_xor = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-# output_xor = np.array([0, 1, 1, 0])
-# nn = Network(2, [3], 1)
-# nn.train(input_xor, output_xor, 10000, 0.5)
+# input_xor = np.array([[-1, 1], [1, -1], [-1, -1], [1, 1]])
+# output_xor = np.array([1, 1, -1, -1])
+# # input_xor = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+# # output_xor = np.array([0, 1, 1, 0])
+# nn = Network(2, [2], 1)
+# nn.train(input_xor, output_xor, 100000, 0.1)
 #
 # for inp in range(len(input_xor)):
 #     output = nn.predict(input_xor[inp])
