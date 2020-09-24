@@ -9,7 +9,7 @@
       "total_epochs": "300",
       "epoch_step": "50",
       "learn_factor": "0.01",
-      "k": "5",
+      "k": "10",
       "cross_validation": "true",
       "beta": "1"
   }]
