@@ -5,6 +5,7 @@ para instalar las dependencias necesarias.
 Luego para ejecutar un script ingresar el comando 'py archivo.py', siendo "archivo" el nombre del script de Python
 Siendo nuestros archivos ejecutables: LogicAnd.py, LogicXor.py, DigitsTest.py, XorMIpTest, SimpleLinearDataTest.py y NonLinearDataTest.py
 
+Dentro de la carpeta data se encuentra el archívo config.json donde se ingresan ingresan los parametros de ejecución:
 ej1:
 learn_factor: el factor de aprendizaje del perceptrón,
 
