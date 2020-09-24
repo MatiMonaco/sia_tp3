@@ -27,6 +27,7 @@ with open('./data/config.json') as json_file:
         print('Epoch Step: ' + p['epoch_step'])
         print('Learn Factor: ' + p['learn_factor'])
         print('Beta: ' + p['beta'])
+        print('Cross Validation: ' + p['cross_validation'])
         print('K: ' + p['k'])
         print('')
 
@@ -36,6 +37,7 @@ epoch_step = int(p['epoch_step'])
 epochs_array = np.arange(epoch_step, total_epochs + epoch_step, epoch_step)
 learn_factor = float(p['learn_factor'])
 beta = float(p['beta'])
+cross_validation = p['cross_validation']
 ################################################
 
 # Initialize train and test partitions
@@ -75,9 +77,12 @@ min_index = 0
 min_test_error = 100000
 min_train_error = 0
 min_test_output = []
+cross_validation_limit = k
+if cross_validation == "false":
+    cross_validation_limit = 1
 for epoch in epochs_array:
     epochs_history = np.append(epochs_history, epoch)
-    for i in range(k):
+    for i in range(cross_validation_limit):
         print("#######################################")
         print("K = ", i)
         new_weights, train_error, epochs = nlsp.fit(weights, learn_factor,beta, train_sets[i], train_outputs[i],
