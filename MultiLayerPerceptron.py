@@ -10,7 +10,7 @@ def sigmoid(x):
 
 def sigmoid_derivative(x):
     # return x * (1 - x)
-    return 1 - np.tanh(x)*np.tanh(x)
+    return 1 - np.tanh(x) * np.tanh(x)
 
 
 class Network:
@@ -86,7 +86,7 @@ class Network:
                 self.update_weights(eta)
 
                 total_error += self.mean_square_error(outputs[j], predicted_output)
-            print("Error: {} at epoch {}".format(total_error / len(inputs), i+1))
+            print("Error: {} at epoch {}".format(total_error / len(inputs), i + 1))
             if adaptive_lr:
                 etas.append(eta)
                 eta = self.exp_decay(i, etas[0])
@@ -127,8 +127,9 @@ class Network:
     def reset(self, n_of_inputs, hidden_layers, n_of_outputs):
         self.__init__(n_of_inputs, hidden_layers, n_of_outputs)
 
+
 # DIGITS TEST:
-df = pd.read_csv('numerosenbits', delimiter="\n", header=None)
+df = pd.read_csv('data/numerosenbits', delimiter="\n", header=None)
 
 data_array = np.array(df)
 data_array = data_array.reshape(10, 7)
@@ -142,7 +143,6 @@ for i in range(len(data_array)):
 input_numbers = data_array.astype(float) / 31
 # output_numbers = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) / 9
 output_numbers = np.array([1, -1, 1, -1, 1, -1, 1, -1, 1, -1])
-
 
 nn = Network(7, [5], 1)
 nn.train(input_numbers[6:10], output_numbers, 1000, 0.5, True)
