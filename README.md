@@ -19,12 +19,14 @@ beta: Valor de la variable Beta en la fórmulas sigmodeas.
 
 
 Ejemplo de configuración de ejecución:
+
 {
   "ej1": [{
       "limit": "500",
       "learn_factor": "0.1"
 
   }],
+
 
   "ej2": [{
       "total_epochs": "300",
