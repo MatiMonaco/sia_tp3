@@ -22,18 +22,27 @@ Ejemplo de configuración de ejecución:
 
 {
   "ej1": [{
+  
       "limit": "500",
+      
       "learn_factor": "0.1"
 
   }],
 
 
   "ej2": [{
+  
       "total_epochs": "300",
+      
       "epoch_step": "50",
+      
       "learn_factor": "0.01",
+      
       "k": "5",
+      
       "cross_validation": "true",
+      
       "beta": "5"
+      
   }]
 }
