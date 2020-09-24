@@ -19,8 +19,7 @@ class NonLinearSimplePerceptron:
         self.errors_history = np.array([])
         self.epochs = 0
 
-
-    def fit(self, initial_weights, learn_factor,beta, entries, expected_outputs, limit):
+    def fit(self, initial_weights, learn_factor, beta, entries, expected_outputs, limit):
 
         n_samples = entries.shape[0]
 
@@ -30,7 +29,7 @@ class NonLinearSimplePerceptron:
         self.weights_history = [self.weights]
         # Add column of 1s
         x = np.concatenate([entries, np.ones((n_samples, 1))], axis=1)
-        #count = 0
+        # count = 0
         for i in range(limit):
             # if count >= recalculation:
             #   self.weights = np.random.random_sample(n_features + 1) * 2 - 1
@@ -53,7 +52,7 @@ class NonLinearSimplePerceptron:
                 return self.weights, error, self.epochs
                 break
 
-    def predict(self, entries, expected_outputs,beta):
+    def predict(self, entries, expected_outputs, beta):
         if not hasattr(self, 'weights'):
             print('The model is not trained yet!')
             return
