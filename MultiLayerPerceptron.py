@@ -144,7 +144,7 @@ input_numbers = data_array.astype(float) / 31
 output_numbers = np.array([1, -1, 1, -1, 1, -1, 1, -1, 1, -1])
 
 
-nn = Network(7, [10, 10, 10], 1)
+nn = Network(7, [5], 1)
 nn.train(input_numbers[6:10], output_numbers, 1000, 0.5, True)
 
 for inp in range(len(input_numbers)):
