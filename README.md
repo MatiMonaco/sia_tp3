@@ -1,5 +1,6 @@
 # sia_tp3
 Ejecución:
+
 Colocarse en el directorio donde se encuentre el archivo requirements.txt dentro de una terminal e ingresar el comando 'pip install -r requirement.txt'
 para instalar las dependencias necesarias.
 Luego para ejecutar un script ingresar el comando 'py archivo.py', siendo "archivo" el nombre del script de Python
