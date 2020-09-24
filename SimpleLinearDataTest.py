@@ -124,7 +124,7 @@ handles = [Line2D([0], [0], color='blue', label='Train error'),
            Line2D(range(1), range(1), color='red', label='Test error')
            ]
 plt.legend(handles=handles, loc='upper right')
-plt.title("Test and Train errors")
+plt.title("Test and Train errors ( Test size = %i"%test_size+"; Train Size = %i"% train_size+" )")
 plt.xlabel("Epochs")
 plt.ylabel("Error")
 animation = camera.animate(interval=1, repeat=False)
