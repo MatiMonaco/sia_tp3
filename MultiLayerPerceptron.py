@@ -100,21 +100,21 @@ class Network:
             output = self.activations[i + 1]
 
             delta = sigmoid_derivative(output) * error
-            delta = delta.reshape(delta.shape[0], -1).T
+            self.deltas[i] = delta.reshape(delta.shape[0], -1).T
 
             inputs = self.activations[i]
             inputs = inputs.reshape(inputs.shape[0], -1)
 
-            self.derivatives[i] = np.dot(inputs, delta)
+            self.derivatives[i] = np.dot(inputs, self.deltas[i])
 
-            error = np.dot(delta, self.weights[i].T)
+            error = np.dot(self.deltas[i], self.weights[i].T)
             error = error.reshape(error.shape[1])
 
     def update_weights(self, eta):
 
         for i in range(len(self.weights)):
             self.weights[i] += eta * self.derivatives[i]
-            self.biases[i] += eta * self.deltas[i]
+            self.biases[i] += eta * self.deltas[i].reshape(self.biases[i].shape)
 
     def mean_square_error(self, expected, predicted_output):
         return np.average((expected - predicted_output) ** 2)
